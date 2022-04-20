@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:service_status/theme/theme.dart';
+import 'package:service_status/utils/focus_remover.dart';
 
 import 'constants.dart';
 import 'screens/welcome_screen.dart';
@@ -25,11 +26,7 @@ class MyApp extends StatelessWidget {
       home: const WelcomePage(),
       builder: (context, child) => GestureDetector(
         onTap: () {
-          FocusScopeNode currentFocus = FocusScope.of(context);
-          if (!currentFocus.hasPrimaryFocus &&
-              currentFocus.focusedChild != null) {
-            FocusManager.instance.primaryFocus?.unfocus();
-          }
+          removeFocus(context);
         },
         child: child,
       ),

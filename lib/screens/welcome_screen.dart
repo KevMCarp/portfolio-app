@@ -6,6 +6,7 @@ import 'package:service_status/components/outlined_text_field.dart';
 import 'package:service_status/components/screen_layout.dart';
 import 'package:service_status/routes/routes.dart';
 import 'package:service_status/screens/status_screen.dart';
+import 'package:service_status/utils/focus_remover.dart';
 import 'package:service_status/utils/validators.dart';
 
 import '../components/outlined_elevated_button.dart';
@@ -38,8 +39,8 @@ class _WelcomePageState extends State<WelcomePage> {
 
   void _start() async {
     final form = _formKey.currentState!;
-
     if (form.validate()) {
+      removeFocus(context);
       form.save();
       await showCarSeachDialog(context, _reg);
       _controller.isActive = true;

@@ -68,7 +68,7 @@ class ScreenLayout extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: childMainAxisAlignment,
                   children: [
-                    if (carAnimation != null) carAnimation!,
+                    if (carAnimation != null) Flexible(child: carAnimation!),
                     ..._children()
                   ],
                 ),
