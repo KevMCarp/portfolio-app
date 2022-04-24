@@ -7,11 +7,13 @@ class CarAnimation extends StatelessWidget {
   const CarAnimation({
     required this.isPlaying,
     required this.controller,
+    this.onInit,
     Key? key,
   }) : super(key: key);
 
   final bool isPlaying;
   final RiveAnimationController controller;
+  final void Function(Artboard artboard)? onInit;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +42,7 @@ class CarAnimation extends StatelessWidget {
                 child: RiveAnimation.asset(
                   kCarRive,
                   controllers: [controller],
+                  onInit: onInit,
                 ),
               ),
             ),

@@ -6,44 +6,40 @@ import 'scaffold.dart';
 class ScreenLayout extends StatelessWidget {
   const ScreenLayout({
     required this.title,
-    this.children = const [],
-    this.carAnimation,
-    this.childPadding = const EdgeInsets.symmetric(horizontal: 12),
-    this.childMainAxisAlignment = MainAxisAlignment.spaceEvenly,
+    required this.portraitBuilder,
+    this.tabletBuilder,
+    this.landscapeBuilder,
     this.footer,
     Key? key,
   }) : super(key: key);
 
   final String title;
-  final List<Widget> children;
-  final CarAnimation? carAnimation;
-  final EdgeInsetsGeometry childPadding;
-  final MainAxisAlignment childMainAxisAlignment;
+
+  /// If null, wil fallback to [portraitBuilder]
+  final Widget Function(BuildContext context)? tabletBuilder;
+
+  final Widget Function(BuildContext context) portraitBuilder;
+
+  /// If null, wil fallback to [portraitBuilder]
+  final Widget Function(BuildContext context)? landscapeBuilder;
+
   final Widget? footer;
 
-  List<Widget> _children() {
-    if (children.length == 1) {
-      var child = children.first;
+  Widget _layout(BuildContext context) {
+    final media = MediaQuery.of(context);
 
-      if (childPadding.isNonNegative) {
-        child = Padding(
-          padding: childPadding,
-          child: child,
-        );
-      }
-
-      return [Expanded(child: child)];
+    if (media.size.height > 1000) {
+      return tabletBuilder != null
+          ? tabletBuilder!(context)
+          : portraitBuilder(context);
     }
 
-    if (childPadding.isNonNegative) {
-      return children
-          .map((e) => Padding(
-                padding: childPadding,
-                child: e,
-              ))
-          .toList();
+    if (media.orientation == Orientation.landscape &&
+        landscapeBuilder != null) {
+      return landscapeBuilder!(context);
     }
-    return children;
+
+    return portraitBuilder(context);
   }
 
   @override
@@ -64,14 +60,7 @@ class ScreenLayout extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: childMainAxisAlignment,
-                  children: [
-                    if (carAnimation != null) Flexible(child: carAnimation!),
-                    ..._children()
-                  ],
-                ),
+                child: _layout(context),
               ),
               if (footer != null)
                 Padding(

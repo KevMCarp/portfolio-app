@@ -115,6 +115,7 @@ class _WelcomePageState extends State<WelcomePage> {
     final car = CarAnimation(
       isPlaying: _isPlaying,
       controller: _controller,
+      onInit: (_) => setState(() {}),
     );
 
     final button = OutlinedElevatedButton(
@@ -124,24 +125,24 @@ class _WelcomePageState extends State<WelcomePage> {
 
     return ScreenLayout(
       title: 'Welcome to $kAppTitle',
-      carAnimation: orientation == Orientation.portrait ? car : null,
-      childPadding: const EdgeInsets.symmetric(
-        horizontal: 12,
-        vertical: 8,
-      ),
-      children: [
-        if (orientation == Orientation.landscape)
-          landscapeLayout(
-            text: text,
-            textField: textField,
-            car: car,
-            button: button,
-          ),
-        if (orientation == Orientation.portrait) ...[
-          text,
-          textField,
-        ]
-      ],
+      portraitBuilder: (context) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            car,
+            text,
+            textField,
+          ],
+        );
+      },
+      landscapeBuilder: (context) {
+        return landscapeLayout(
+          text: text,
+          textField: textField,
+          car: car,
+          button: button,
+        );
+      },
       footer: orientation == Orientation.portrait ? button : null,
     );
   }

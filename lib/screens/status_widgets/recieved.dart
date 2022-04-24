@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:service_status/components/date_time_text.dart';
 import 'package:service_status/components/outlined_elevated_button.dart';
 import 'package:service_status/components/screen_layout.dart';
 import 'package:service_status/constants.dart';
@@ -20,10 +21,6 @@ class RecievedScreen extends StatelessWidget {
 
   Widget landscapeLayout({
     required TextStyle bodyStyle,
-    required TextStyle dateStyle,
-    required TextStyle timeStyle,
-    required String date,
-    required String time,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -56,16 +53,9 @@ class RecievedScreen extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 10),
         ),
         Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                time,
-                style: timeStyle,
-                // style: textTheme.headline1,
-              ),
-              const Text(_estimatedCompletion),
-            ],
+          child: DateTimeText(
+            timestamp: timestamp,
+            caption: _estimatedCompletion,
           ),
         ),
       ],
@@ -74,10 +64,6 @@ class RecievedScreen extends StatelessWidget {
 
   List<Widget> portraitLayout({
     required TextStyle bodyStyle,
-    required TextStyle dateStyle,
-    required TextStyle timeStyle,
-    required String date,
-    required String time,
   }) {
     return [
       Text(
@@ -86,12 +72,10 @@ class RecievedScreen extends StatelessWidget {
         textAlign: TextAlign.center,
       ),
       kHeightSpacer,
-      Text(
-        time,
-        style: timeStyle,
-        // style: textTheme.headline1,
+      DateTimeText(
+        timestamp: timestamp,
+        caption: _estimatedCompletion,
       ),
-      const Text(_estimatedCompletion),
       kHeightSpacer,
       Text(
         _checkBack,
@@ -102,35 +86,20 @@ class RecievedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final media = MediaQuery.of(context);
-
     final textTheme = Theme.of(context).textTheme;
     final bodyStyle = textTheme.bodyText1!.copyWith(fontSize: 18);
 
-    final date = DateFormat('dd/MM/yyyy').format(timestamp);
-    final time = DateFormat('hh:mm').format(timestamp);
-
     return ScreenLayout(
       title: 'Recieved',
-      // childMainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        if (media.orientation == Orientation.landscape)
-          landscapeLayout(
-            bodyStyle: bodyStyle,
-            dateStyle: textTheme.headline4!,
-            timeStyle: textTheme.headline1!,
-            date: date,
-            time: time,
-          ),
-        if (media.orientation == Orientation.portrait)
-          ...portraitLayout(
-            bodyStyle: bodyStyle,
-            dateStyle: textTheme.headline4!,
-            timeStyle: textTheme.headline1!,
-            date: date,
-            time: time,
-          ),
-      ],
+      portraitBuilder: (context) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: portraitLayout(bodyStyle: bodyStyle),
+        );
+      },
+      landscapeBuilder: (context) {
+        return landscapeLayout(bodyStyle: bodyStyle);
+      },
       footer: OutlinedElevatedButton(
         onPressed: () {
           pushWelcomeRoute(context);

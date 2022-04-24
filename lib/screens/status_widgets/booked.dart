@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:service_status/components/date_time_text.dart';
 import 'package:service_status/components/outlined_elevated_button.dart';
 import 'package:service_status/components/screen_layout.dart';
 import 'package:service_status/constants.dart';
 import 'package:service_status/routes/routes.dart';
+
+const _weLookForward = 'We look forward to seeing you!';
+const _bookedInFor = 'Your vehicle has been booked in for:';
+const _heightSpacer = SizedBox(height: 20);
 
 class BookedScreen extends StatelessWidget {
   const BookedScreen({
@@ -15,28 +20,25 @@ class BookedScreen extends StatelessWidget {
 
   Widget landscapeLayout({
     required TextStyle bodyStyle,
-    required TextStyle dateStyle,
-    required TextStyle timeStyle,
-    required String date,
-    required String time,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Your vehicle has been booked in for:',
-              style: bodyStyle,
-            ),
-            kHeightSpacer,
-            kHeightSpacer,
-            Text(
-              'We look forward to seeing you!',
-              style: bodyStyle,
-            ),
-          ],
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                _bookedInFor,
+                style: bodyStyle,
+              ),
+              _heightSpacer,
+              Text(
+                _weLookForward,
+                style: bodyStyle,
+              ),
+            ],
+          ),
         ),
         Container(
           color: kPrimaryColor,
@@ -44,19 +46,11 @@ class BookedScreen extends StatelessWidget {
           height: 150,
           margin: const EdgeInsets.symmetric(horizontal: 10),
         ),
-        Column(
-          children: [
-            Text(
-              time,
-              style: timeStyle,
-              // style: textTheme.headline1,
-            ),
-            Text(
-              date,
-              style: dateStyle,
-              // style: textTheme.headline4,
-            ),
-          ],
+        Expanded(
+          child: DateTimeText(
+            timestamp: timestamp,
+            showDate: true,
+          ),
         ),
       ],
     );
@@ -64,30 +58,20 @@ class BookedScreen extends StatelessWidget {
 
   List<Widget> portraitLayout({
     required TextStyle bodyStyle,
-    required TextStyle dateStyle,
-    required TextStyle timeStyle,
-    required String date,
-    required String time,
   }) {
     return [
       Text(
-        'Your vehicle has been booked in for:',
+        _bookedInFor,
         style: bodyStyle,
       ),
-      kHeightSpacer,
-      Text(
-        time,
-        style: timeStyle,
-        // style: textTheme.headline1,
+      _heightSpacer,
+      DateTimeText(
+        timestamp: timestamp,
+        showDate: true,
       ),
+      _heightSpacer,
       Text(
-        date,
-        style: dateStyle,
-        // style: textTheme.headline4,
-      ),
-      kHeightSpacer,
-      Text(
-        'We look forward to seeing you!',
+        _weLookForward,
         style: bodyStyle,
       ),
     ];
@@ -95,35 +79,20 @@ class BookedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final media = MediaQuery.of(context);
-
     final textTheme = Theme.of(context).textTheme;
     final bodyStyle = textTheme.bodyText1!.copyWith(fontSize: 18);
 
-    final date = DateFormat('dd/MM/yyyy').format(timestamp);
-    final time = DateFormat('hh:mm').format(timestamp);
-
     return ScreenLayout(
       title: 'Booked',
-      childMainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        if (media.orientation == Orientation.landscape)
-          landscapeLayout(
-            bodyStyle: bodyStyle,
-            dateStyle: textTheme.headline4!,
-            timeStyle: textTheme.headline1!,
-            date: date,
-            time: time,
-          ),
-        if (media.orientation == Orientation.portrait)
-          ...portraitLayout(
-            bodyStyle: bodyStyle,
-            dateStyle: textTheme.headline4!,
-            timeStyle: textTheme.headline1!,
-            date: date,
-            time: time,
-          ),
-      ],
+      portraitBuilder: (context) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: portraitLayout(bodyStyle: bodyStyle),
+        );
+      },
+      landscapeBuilder: (context) => landscapeLayout(
+        bodyStyle: bodyStyle,
+      ),
       footer: OutlinedElevatedButton(
         onPressed: () {
           pushWelcomeRoute(context);
