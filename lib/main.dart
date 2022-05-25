@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:service_status/theme/theme.dart';
-import 'package:service_status/utils/focus_remover.dart';
 
-import 'constants.dart';
 import 'screens/welcome_screen.dart';
+import 'theme/theme.dart';
+import 'utils/focus_remover.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -15,9 +14,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
-    print(now);
-
     return MaterialApp(
       title: 'Service',
       themeMode: ThemeMode.system,
