@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
-import 'package:service_status/components/car_animation.dart';
-import 'package:service_status/components/dialogs/car_search_dialog.dart';
-import 'package:service_status/components/outlined_text_field.dart';
-import 'package:service_status/components/screen_layout.dart';
-import 'package:service_status/routes/routes.dart';
-import 'package:service_status/screens/status_screen.dart';
-import 'package:service_status/utils/focus_remover.dart';
-import 'package:service_status/utils/validators.dart';
 
+import '../components/car_animation.dart';
 import '../components/outlined_elevated_button.dart';
-import '../components/scaffold.dart';
+import '../components/outlined_text_field.dart';
+import '../components/screen_layout.dart';
 import '../constants.dart';
+import '../routes/routes.dart';
+import '../utils/focus_remover.dart';
+import '../utils/validators.dart';
+import 'status_screen.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -40,15 +38,25 @@ class _WelcomePageState extends State<WelcomePage> {
   void _start() async {
     final form = _formKey.currentState!;
     if (form.validate()) {
+      //Close keyboard if open.
       removeFocus(context);
+      //Save registration
       form.save();
-      await showCarSeachDialog(context, _reg);
+
+      //Wait for car animation to complete
       _controller.isActive = true;
       setState(() {
         _isPlaying = true;
       });
       await Future.delayed(kTransitionDuration);
-      pushReplacementRoute(context, const StatusScreen());
+
+      //Push to status screen and pass vehicle registration
+      pushReplacementRoute(
+        context,
+        StatusScreen(
+          vehicleRegistration: _reg,
+        ),
+      );
     }
   }
 

@@ -28,3 +28,31 @@ class CarSearchDialog extends StatelessWidget {
     );
   }
 }
+
+class SearchSpinner extends StatelessWidget {
+  const SearchSpinner({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: SizedBox(
+          width: 200,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              Center(child: TrafficLightSpinner()),
+              SizedBox(height: 5),
+              Text(
+                'Looking for vehicle information..',
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
