@@ -3,7 +3,7 @@ import 'package:rive/rive.dart';
 
 import '../components/car_animation.dart';
 import '../components/outlined_elevated_button.dart';
-import '../components/outlined_text_field.dart';
+import '../components/registration_text_field.dart';
 import '../components/screen_layout.dart';
 import '../constants.dart';
 import '../routes/routes.dart';
@@ -35,8 +35,9 @@ class _WelcomePageState extends State<WelcomePage> {
     _formKey = GlobalKey<FormState>();
   }
 
-  void _start() async {
+  void _start({required VoidCallback onComplete}) async {
     final form = _formKey.currentState!;
+
     if (form.validate()) {
       //Close keyboard if open.
       removeFocus(context);
@@ -51,12 +52,7 @@ class _WelcomePageState extends State<WelcomePage> {
       await Future.delayed(kTransitionDuration);
 
       //Push to status screen and pass vehicle registration
-      pushReplacementRoute(
-        context,
-        StatusScreen(
-          vehicleRegistration: _reg,
-        ),
-      );
+      onComplete();
     }
   }
 
@@ -110,7 +106,7 @@ class _WelcomePageState extends State<WelcomePage> {
       width: 200,
       child: Form(
         key: _formKey,
-        child: OutlinedTextField(
+        child: RegistrationTextField(
           onSaved: (value) => _reg = value ?? '',
           validator: (value) => Validators.registration(value),
           textStyle: const TextStyle(fontFamily: 'UKNumberPlate', fontSize: 28),
@@ -127,7 +123,14 @@ class _WelcomePageState extends State<WelcomePage> {
     );
 
     final button = OutlinedElevatedButton(
-      onPressed: () => _start(),
+      onPressed: () => _start(
+        onComplete: () => pushReplacementRoute(
+          context,
+          StatusScreen(
+            vehicleRegistration: _reg,
+          ),
+        ),
+      ),
       child: const Text('Let\'s get started'),
     );
 
