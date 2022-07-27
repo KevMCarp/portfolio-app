@@ -24,3 +24,7 @@ void pushWelcomeRoute(BuildContext context) {
     ),
   );
 }
+
+void pop(BuildContext context) {
+  Navigator.of(context).pop();
+}
