@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:service_status/components/date_time_text.dart';
-import 'package:service_status/components/outlined_elevated_button.dart';
-import 'package:service_status/components/screen_layout.dart';
-import 'package:service_status/constants.dart';
-import 'package:service_status/routes/routes.dart';
+
+import '../../components/date_time_text.dart';
+import '../../components/outlined_elevated_button.dart';
+import '../../components/screen_layout.dart';
+import '../../constants.dart';
+import '../../routes/routes.dart';
 
 const _weLookForward = 'We look forward to seeing you!';
 const _bookedInFor = 'Your vehicle has been booked in for:';
@@ -85,9 +85,12 @@ class BookedScreen extends StatelessWidget {
     return ScreenLayout(
       title: 'Booked',
       portraitBuilder: (context) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: portraitLayout(bodyStyle: bodyStyle),
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: portraitLayout(bodyStyle: bodyStyle),
+          ),
         );
       },
       landscapeBuilder: (context) => landscapeLayout(
@@ -95,7 +98,7 @@ class BookedScreen extends StatelessWidget {
       ),
       footer: OutlinedElevatedButton(
         onPressed: () {
-          pushWelcomeRoute(context);
+          pop(context);
         },
         child: const Text('Back'),
       ),
