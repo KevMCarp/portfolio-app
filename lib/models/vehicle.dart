@@ -4,11 +4,17 @@ class Vehicle {
   /// The vehicle registration number
   final String registration;
 
+  /// Not null if [status] is one of the following statuses
+  ///
+  /// booked, recieved, workshop,
+  final DateTime? timestamp;
+
   final VehicleStatus status;
 
-  const Vehicle({
+  const Vehicle._({
     required this.registration,
     required this.status,
+    required this.timestamp,
   });
 
   /// Upper case without spaces to aid lookup in the database
@@ -20,9 +26,9 @@ class Vehicle {
       orElse: () => VehicleStatus.unknown,
     );
 
-    return Vehicle(
-      registration: json['registration'],
-      status: status,
-    );
+    return Vehicle._(
+        registration: json['registration'],
+        status: status,
+        timestamp: json['timestamp']);
   }
 }
